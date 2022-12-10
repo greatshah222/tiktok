@@ -19,6 +19,17 @@ const Upload = () => {
     const [videoAsset, setVideoAsset] = useState<SanityAssetDocument | undefined>();
     const [wrongFileType, setwrongFileType] = useState(false);
 
+    const [caption, setCaption] = useState("");
+
+    const [category, setCategory] = useState(topics[0]);
+
+    const [savingPost, setSavingPost] = useState(false);
+
+    const { userProfile }: { userProfile: any } = useAuthStore();
+    const router = useRouter();
+
+    console.log("userProfile", userProfile);
+
     const uploadVideo = async (e: any) => {
         const selectedFile = e.target.files[0];
 
@@ -37,6 +48,35 @@ const Upload = () => {
         } else {
             setIsLoading(false);
             setwrongFileType(true);
+        }
+    };
+
+    const handlePost = async () => {
+        console.log("caption && videoAsset?.id && category", caption, videoAsset?.id, category);
+        if (caption && videoAsset?._id && category) {
+            setSavingPost(true);
+            const document = {
+                _type: "post",
+                caption,
+                video: {
+                    _type: "file",
+                    asset: {
+                        _type: "reference",
+                        _ref: videoAsset?._id,
+                    },
+                },
+                userId: userProfile?._id,
+                postedBy: {
+                    _type: "postedBy",
+                    _ref: userProfile?._id,
+                },
+
+                topic: category,
+            };
+
+            await axios.post(`http://localhost:3000/api/post`, document);
+            setSavingPost(false);
+            router.push("/");
         }
     };
     return (
@@ -91,11 +131,23 @@ const Upload = () => {
                 <div className="flex flex-col gap-3 pb-10">
                     <label className="text-md font-medium">Caption</label>
 
-                    <input type={"text"} value="" onChange={() => {}} className="outline-none rounded text-md border-2 border-gray-200 p-2" />
+                    <input
+                        type={"text"}
+                        value={caption}
+                        onChange={({ target }) => {
+                            setCaption(target.value);
+                        }}
+                        className="outline-none rounded text-md border-2 border-gray-200 p-2"
+                    />
 
                     <label className="text-md font-medium">Chose a Category</label>
 
-                    <select onChange={() => {}} className="outline-none border-2 border-gray-200 text-md capitalize lg:p-4 p-2 rounded cursor-pointer">
+                    <select
+                        onChange={({ target }) => {
+                            setCategory(target.value);
+                        }}
+                        className="outline-none border-2 border-gray-200 text-md capitalize lg:p-4 p-2 rounded cursor-pointer"
+                    >
                         {topics.map((el) => (
                             <option key={el.name} className="outline-none capitalize bg-white text-gray-700 text-md p-2 hover:bg-slate-300" value={el.name}>
                                 {el.name}
@@ -103,17 +155,13 @@ const Upload = () => {
                         ))}
                     </select>
                     <div className="flex gap-6 mt-10">
-                        <button
-                            type="button"
-                            onChange={() => {}}
-                            className="border-gray-300 border-2 text-md font-medium p-2 rounded w-28 lg:w-44 outline-none"
-                        >
+                        <button type="button" onClick={() => {}} className="border-gray-300 border-2 text-md font-medium p-2 rounded w-28 lg:w-44 outline-none">
                             {" "}
                             Discard
                         </button>
                         <button
                             type="button"
-                            onChange={() => {}}
+                            onClick={handlePost}
                             className="bg-[#F51997] text-white border-2 text-md font-medium p-2 rounded w-28 lg:w-44 outline-none"
                         >
                             {" "}

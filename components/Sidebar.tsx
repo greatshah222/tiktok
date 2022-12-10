@@ -31,12 +31,12 @@ const Sidebar = () => {
                             </div>
                         </Link>
                     </div>
-                    {!userProfle && (
+                    {/* {!userProfle && (
                         <div className="px-2 py-4 hidden xl:block">
                             <p className="text-gray-400">Log in to like and comment on videos</p>
 
                             <div className="pr-4">
-                                {/* <GoogleLogin
+                                <GoogleLogin
                                     clientId=""
                                     onSuccess={() => {}}
                                     onFailure={() => {}}
@@ -56,10 +56,10 @@ const Sidebar = () => {
                                             Log in
                                         </button>
                                     )}
-                                /> */}
+                                />
                             </div>
                         </div>
-                    )}
+                    )} */}
                     <Discover />
                     <SuggestedAccounts />
                     <Footer />

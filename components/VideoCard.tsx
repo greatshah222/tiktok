@@ -15,6 +15,7 @@ interface IProps {
 }
 // this is better way for props
 const VideoCard: NextPage<IProps> = ({ post }) => {
+    console.log("post", post);
     const [isHover, setIsHover] = useState(false);
     const [playing, setPlaying] = useState(false);
     const [videoMuted, setVideoMuted] = useState(false);
@@ -38,19 +39,19 @@ const VideoCard: NextPage<IProps> = ({ post }) => {
                         <Link href={"/"}>
                             {/* // cant have image directly inside Link so there is a fragment */}
                             <>
-                                <Image width={62} height={62} className="rounded-full" src={post.postedBy.image} alt="Profile Photo" layout="responsive" />
+                                <Image width={62} height={62} className="rounded-full" src={post?.postedBy?.image} alt="Profile Photo" layout="responsive" />
                             </>
                         </Link>
                     </div>
                     <div>
                         <Link href={"/"}>
                             <div className="flex items-center gap-2">
-                                <p className="flex gap-2 items-center md:text-md font-bold text-primary">{post.postedBy.userName}</p>{" "}
+                                <p className="flex gap-2 items-center md:text-md font-bold text-primary">{post?.postedBy?.userName}</p>{" "}
                                 <p>
                                     {" "}
                                     <GoVerified className="text-blue-400 text-md" />
                                 </p>
-                                <p className="capitalize font-medium text-xs text-gray-500 hidden md:block">{post.postedBy.userName}</p>
+                                <p className="capitalize font-medium text-xs text-gray-500 hidden md:block">{post?.postedBy?.userName}</p>
                             </div>
                         </Link>
                     </div>
@@ -66,12 +67,12 @@ const VideoCard: NextPage<IProps> = ({ post }) => {
                         setIsHover(false);
                     }}
                 >
-                    <Link href={"/"}>
+                    <Link href={`detail/${post?._id}`}>
                         <video
                             ref={videoRef}
                             src={post.video.asset.url}
                             loop
-                            className="lg:w[600px] h-[300px] md:h-[400px] lg:h-[530px] w-[200px] rounded-2xl cursor-pointer bg-gray-100 "
+                            className="lg:w-[600px] h-[300px] md:h-[400px] lg:h-[530px] w-[200px] rounded-2xl cursor-pointer bg-gray-100 "
                         ></video>
                     </Link>
                     {isHover && (
